@@ -252,12 +252,14 @@ export function createAppearance(current, panelCss, wallpaperCss, options, actio
   add(appearance, 'h3', '侧栏与输入框', 'heading');
   function glass() {
     host.toggleAttribute('data-glass', Boolean(values.glass));
+    host.toggleAttribute('data-cinematic', Boolean(values.cinematic));
     style.textContent = wallpaperCss + 'body:has(> #cwe-appearance[data-glass]) {' +
-      '--cwe-glass-color:' + (values.glassTheme ? 'var(--color-background-surface, Canvas)' : values.glassColor ?? '#262c3e') + ';' +
+      '--cwe-glass-color:' + (values.glassTheme ? 'var(--cwe-surface, var(--color-background-surface, Canvas))' : values.glassColor ?? '#262c3e') + ';' +
       '--cwe-glass-opacity:' + (values.glassOpacity ?? 86) + '%;' +
       '--cwe-glass-blur:' + (values.glassBlur ?? 8) + 'px;' +
       '--cwe-glass-border:' + (values.glassBorder ?? 15) + '%;}';
   }
+  setting(appearance, 'appearance', 'cinematic', '深色壁纸界面', false, 'checkbox', null, glass);
   setting(appearance, 'appearance', 'glass', '启用玻璃外观', false, 'checkbox', null, glass);
   setting(appearance, 'appearance', 'glassTheme', '使用当前主题色', true, 'checkbox', null, glass);
   setting(appearance, 'appearance', 'glassColor', '自定义玻璃颜色', '#262c3e', 'color', null, glass);
@@ -287,6 +289,7 @@ export function createAppearance(current, panelCss, wallpaperCss, options, actio
     ['原色', { dim: 20 }],
     ['低光', { brightness: 70, contrast: 105, saturation: 85, dim: 55 }],
     ['透光玻璃', { dim: 38, glass: true, glassOpacity: 64, glassBlur: 12, glassBorder: 22 }],
+    ['夜幕玻璃', { dim: 20, contrast: 108, glass: true, cinematic: true, glassOpacity: 50, glassBlur: 16, glassBorder: 17 }],
   ]) {
     add(shortcuts, 'button', name).addEventListener('click', () => {
       applyPreset(settings, true);

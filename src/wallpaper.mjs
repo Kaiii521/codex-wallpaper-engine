@@ -52,11 +52,106 @@ const css = `
     animation: cwe-drift 15s ease-in-out infinite alternate;
   }
   #cwe-backdrop[data-paused]::before { animation-play-state: paused; }
-  body:has(> #cwe-appearance[data-glass]) :is(.app-shell-left-panel, .composer-surface-chrome) {
-    background: color-mix(in srgb, var(--cwe-glass-color, Canvas) var(--cwe-glass-opacity), transparent) !important;
+  body:has(> #cwe-appearance[data-glass]) :is(
+    .app-shell-left-panel:not(:has([data-sidebar-navigation-root])),
+    .app-shell-left-panel [data-sidebar-navigation-root],
+    .composer-surface-chrome,
+    [data-composer-surface-variant]:has([data-codex-composer])
+  ) {
+    background: color-mix(in srgb, var(--cwe-glass-color, var(--cwe-surface, Canvas))
+      var(--cwe-effective-glass-opacity, var(--cwe-glass-opacity)), transparent) !important;
     backdrop-filter: blur(var(--cwe-glass-blur)) !important;
     outline: 1px solid color-mix(in srgb, currentColor var(--cwe-glass-border), transparent);
     outline-offset: -1px;
+  }
+  html:has(body > #cwe-appearance[data-cinematic]) {
+    color-scheme: dark !important;
+    --cwe-surface: #1d161c;
+    --color-surface: #1d161c !important;
+    --color-surface-secondary: #211920 !important;
+    --color-surface-elevated: #30242d !important;
+    --color-surface-elevated-secondary: #281e27 !important;
+    --color-background-surface: #120d12 !important;
+    --color-background-panel: #211920 !important;
+    --color-background-composer-surface: #251b23 !important;
+    --color-background-composer-action-bar: #221921 !important;
+    --color-background-composer-primary: #f6dbe8 !important;
+    --color-background-segmented-form-selected: #473340 !important;
+    --color-background-primary-ghost-hover: #ffffff18 !important;
+    --color-token-bg-primary: #231a22 !important;
+    --color-token-main-surface-primary: #1d161c !important;
+    --color-token-side-bar-background: #161116 !important;
+    --color-text: #fff3f7 !important;
+    --color-text-primary: #fff3f7 !important;
+    --color-text-foreground: #fff3f7 !important;
+    --color-text-primary-ghost: #fff3f7 !important;
+    --color-text-primary-ghost-hover: #fff3f7 !important;
+    --color-text-primary-surface: #fff3f7 !important;
+    --color-text-primary-outline: #fff3f7 !important;
+    --color-text-primary-soft: #fff3f7 !important;
+    --color-text-secondary: #e0cbd4 !important;
+    --color-text-secondary-ghost-hover: #fff3f7 !important;
+    --color-text-tertiary: #c5adb9 !important;
+    --color-text-composer-primary: #24151e !important;
+    --color-text-info: #ffb7d1 !important;
+    --color-token-text-primary: #fff3f7 !important;
+    --color-token-foreground: #fff3f7 !important;
+    --color-token-text-secondary: #e0cbd4 !important;
+    --color-token-text-tertiary: #c5adb9 !important;
+    --color-token-input-border: #ffffff26 !important;
+    --color-token-border-default: #ffffff22 !important;
+    --color-border: #ffffff22 !important;
+    color: #fff3f7;
+  }
+  body:has(> #cwe-appearance[data-cinematic]) #root {
+    color: var(--color-text);
+  }
+  body:has(> #cwe-appearance[data-cinematic]) #root :is(.text-default, [class~="text-default!"]) {
+    color: #fff3f7 !important;
+  }
+  body:has(> #cwe-appearance[data-cinematic]) [data-sidebar-navigation-root]
+    :is([data-app-action-sidebar-project-row], [data-sidebar-cycle-item]) {
+    --color-text: #fff3f7 !important;
+    color: #fff3f7;
+  }
+  body:has(> #cwe-appearance[data-cinematic]:not([data-glass]))
+    [data-composer-surface-variant]:has([data-codex-composer]) {
+    background: #251b23 !important;
+  }
+  body:has(> #cwe-appearance[data-cinematic][data-glass]) :is(
+    .composer-surface-chrome, [data-composer-surface-variant]:has([data-codex-composer])
+  ) {
+    --cwe-effective-glass-opacity: max(70%, var(--cwe-glass-opacity));
+  }
+  body:has(> #cwe-appearance[data-cinematic]) [data-codex-composer] {
+    color: var(--color-text) !important;
+  }
+  body:has(> #cwe-appearance[data-cinematic]) [data-codex-composer] [data-placeholder]::before {
+    color: #e0cbd4 !important;
+  }
+  body:has(> #cwe-appearance[data-cinematic]) #cwe-backdrop::after {
+    background: color-mix(in srgb, #0e090f var(--cwe-dim), transparent);
+  }
+  body:has(> #cwe-appearance[data-cinematic])
+    [data-app-action-timeline-scroll] [data-response-annotation-conversation] {
+    color: var(--color-text-primary);
+    background: #171017ce;
+    border-radius: 16px;
+    padding: 10px 14px;
+  }
+  body:has(> #cwe-appearance[data-cinematic]) #root [data-user-message-bubble].bg-user-message {
+    background-color: #2b1823eb !important;
+    color: var(--color-text-primary);
+  }
+  body:has(> #cwe-appearance[data-cinematic])
+    .bg-surface-elevated-secondary[class~="group/summary-panel"] {
+    background: #211920ed !important;
+    color: var(--color-text-primary);
+  }
+  body:has(> #cwe-appearance[data-cinematic][data-glass])
+    .app-shell-left-panel [data-sidebar-navigation-root] {
+    background: color-mix(in srgb, var(--cwe-glass-color, var(--cwe-surface))
+      min(100%, calc(var(--cwe-glass-opacity) + 24%)), transparent) !important;
   }
   @keyframes cwe-drift {
     to { transform: translate(7%, -8%) rotate(14deg) scale(1.14); }
