@@ -7,6 +7,15 @@ const css = `
   body:has(> #cwe-backdrop:not([data-kind="empty"])) :is(.main-surface, [data-app-shell-main-surface="default"]) {
     background: transparent !important;
   }
+  @media (min-width: 75rem) {
+    body:has(> #cwe-backdrop:not([data-kind="empty"])) [data-app-action-timeline-scroll] {
+      --thread-content-responsive-max-width: 60rem;
+    }
+    body:has(> #cwe-backdrop:not([data-kind="empty"])):has(.bg-surface-elevated-secondary[class~="group/summary-panel"])
+      [data-app-action-timeline-scroll] {
+      --thread-content-responsive-max-width: clamp(48rem, calc(100% - 40rem), 60rem);
+    }
+  }
   body:has(> #cwe-backdrop:not([data-kind="empty"]))
     [data-thread-scroll-footer="true"] > .bg-surface[aria-hidden="true"],
   body:has(> #cwe-backdrop:not([data-kind="empty"]))
