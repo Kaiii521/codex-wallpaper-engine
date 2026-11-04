@@ -1,5 +1,7 @@
 # Codex Wallpaper Engine
 
+**简体中文** · [English](README.en.md)
+
 把本地视频、图片和 Steam 工坊壁纸带到 **Codex 桌面端**的对话背景。视频静音循环，窗口隐藏时自动暂停。壁纸铺在原生界面下方，聊天、侧栏和输入框可以照常操作。
 
 这是一个实验性的第三方工具。当前版本通过本机 Chrome DevTools Protocol（CDP）连接已打开调试端口的桌面客户端。壁纸随窗口会话生效，无需 API Key。图片、视频和工坊预览无需安装 npm 依赖。
