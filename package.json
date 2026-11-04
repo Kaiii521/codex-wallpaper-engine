@@ -1,0 +1,13 @@
+{
+  "name": "codex-wallpaper-engine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local video, image and Steam Workshop wallpapers for Codex Desktop",
+  "type": "module",
+  "engines": { "node": ">=22.4.0" },
+  "scripts": { "test": "node --test" },
+  "optionalDependencies": {
+    "playwright-core": "1.62.1",
+    "webwallgl": "3.0.0"
+  }
+}
