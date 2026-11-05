@@ -67,6 +67,16 @@ node src/cli.mjs resume
 node src/cli.mjs clear
 ```
 
+### Windows 启动时恢复壁纸
+
+在已有 HeiGe Codex Skin Studio Windows 启动助手的电脑上，可在项目目录安装桌面快捷方式：
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\scripts\windows\wallpaper-launcher.ps1 -InstallShortcut
+```
+
+完全退出当前 Codex，再用桌面上的 **Codex Wallpaper** 打开。第一次在工坊页选择壁纸，之后用同一快捷方式打开时会恢复上次选中的工坊壁纸。在工作台选取本地文件或执行 `clear` 会清除上次工坊选择。需要手动接入调试会话时，也可以运行 `node src/cli.mjs library --restore`。
+
 ### 壁纸工作台
 
 应用壁纸后，点击 Codex 窗口右下方的 **壁纸外观**。
@@ -106,6 +116,11 @@ node --test
 ## 更新记录
 
 按 GitHub 功能提交倒序排列。
+
+### 2026-11-05 · Windows 启动时恢复壁纸
+
+- **新增**桌面快捷方式 `Codex Wallpaper`。从该入口启动后，自动恢复上次成功应用的 Steam 工坊壁纸。
+- **新增** `library --restore`，可在已开启调试端口的窗口手动触发恢复。选择失效时会打开工坊列表。
 
 ### 2026-11-04 · 宽屏聊天布局
 

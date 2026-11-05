@@ -68,6 +68,16 @@ node src/cli.mjs resume
 node src/cli.mjs clear
 ```
 
+### Restore a wallpaper at startup on Windows
+
+If you already have the HeiGe Codex Skin Studio Windows startup helper installed, run this command from the project directory to create a desktop shortcut.
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File .\scripts\windows\wallpaper-launcher.ps1 -InstallShortcut
+```
+
+Fully quit Codex and open **Codex Wallpaper** from your desktop. Select a Workshop wallpaper on the first launch. Opening Codex through the shortcut again restores the last Workshop selection. Picking a local file in the workbench or running `clear` forgets that selection. To restore it manually in an existing debugging session, run `node src/cli.mjs library --restore`.
+
 ### Wallpaper Workbench
 
 After applying a wallpaper, click **Wallpaper Appearance** (`壁纸外观`) in the lower-right corner of Codex. The panel currently uses Chinese labels.
@@ -107,6 +117,11 @@ The tool depends on the desktop client's internal page structure and media polic
 ## Changelog
 
 Feature updates are listed from newest to oldest.
+
+### 2026-11-05 · Restore wallpapers at startup on Windows
+
+- **Added** the `Codex Wallpaper` desktop shortcut. Opening Codex through it restores the last successfully applied Steam Workshop wallpaper.
+- **Added** `library --restore` for existing debugging sessions. If the saved project is unavailable, the Workshop library opens instead.
 
 ### 2026-11-04 · Wider chat layout
 

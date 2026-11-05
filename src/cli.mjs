@@ -9,7 +9,7 @@ const help = `Codex Wallpaper Engine
 
   node src/cli.mjs doctor   [--port 9341]
   node src/cli.mjs list     [--steam <Steam directory>]
-  node src/cli.mjs library  [--steam <Steam directory>]
+  node src/cli.mjs library  [--steam <Steam directory>] [--restore]
   node src/cli.mjs demo     [--dim 68]
   node src/cli.mjs apply    <image or video> [--dim 68]
   node src/cli.mjs workshop <Workshop ID> [--steam <Steam directory>] [--preview] [--dim 68]
@@ -29,6 +29,7 @@ async function run() {
       dim: { type: 'string' },
       steam: { type: 'string' },
       preview: { type: 'boolean' },
+      restore: { type: 'boolean' },
     },
   });
   const [command, input, extra] = positionals;
@@ -39,6 +40,7 @@ async function run() {
   const needsInput = command === 'apply' || command === 'workshop';
   if (extra !== undefined || Boolean(input) !== needsInput) throw new Error('See --help for command usage.');
   if (values.preview && command !== 'workshop') throw new Error('--preview is only used with workshop.');
+  if (values.restore && command !== 'library') throw new Error('--restore is only used with library.');
   if (values.steam !== undefined && (!values.steam || !['list', 'library', 'workshop', 'current'].includes(command))) {
     throw new Error('--steam requires a Steam directory and a list, library, workshop or current command.');
   }
@@ -73,7 +75,7 @@ async function run() {
     const stop = () => controller.abort();
     process.once('SIGINT', stop);
     try {
-      await Promise.all(targets.map((target) => serveWorkshop(target, values.steam, controller.signal)));
+      await Promise.all(targets.map((target) => serveWorkshop(target, values.steam, controller.signal, values.restore)));
     } finally {
       stop();
       process.removeListener('SIGINT', stop);

@@ -5,7 +5,7 @@ import { createLiveRenderer } from './live-renderer.mjs';
 import { findWorkshop, workshopMedia } from './media.mjs';
 import { liveFrameExpression, wallpaperExpression } from './wallpaper.mjs';
 
-export async function serveWorkshop(target, steam, signal) {
+export async function serveWorkshop(target, steam, signal, restore = false) {
   let catalog;
   async function scan() {
     const items = await findWorkshop(steam);
@@ -125,7 +125,7 @@ export async function serveWorkshop(target, steam, signal) {
       if (params.payload === 'disconnect') stop();
       else handle(params.payload).catch(() => stop());
     });
-    await evaluate(wallpaperExpression('workshop-connect', { binding, items }, mainPage));
+    await evaluate(wallpaperExpression('workshop-connect', { binding, items, restore }, mainPage));
     console.log(`Workshop library connected: ${items.length} project(s). Press Ctrl+C to disconnect.`);
     await Promise.race([session.closed, stopped]);
   } finally {

@@ -177,6 +177,22 @@ export async function updateWallpaper(command, options, css, expectedPage, creat
   }
   const key = Symbol.for('codex-wallpaper-engine');
   const state = globalThis[key] ??= { revision: 0, current: null };
+  const selectionKey = 'codex-wallpaper-engine.last-workshop-id.v1';
+  function saveSelection(id) {
+    try {
+      if (id) localStorage.setItem(selectionKey, id);
+      else localStorage.removeItem(selectionKey);
+    } catch {
+      // Playback works even when the client disables local storage.
+    }
+  }
+  function lastSelection() {
+    try {
+      return localStorage.getItem(selectionKey);
+    } catch {
+      return null;
+    }
+  }
 
   function update(command, options) {
     return updateWallpaper(command, options, css, expectedPage, createPanel, panelCss, renderWorkshop);
@@ -212,7 +228,9 @@ export async function updateWallpaper(command, options, css, expectedPage, creat
       const media = await state.workshop.request('apply', itemId);
       if (state.current !== current) throw new Error('壁纸已切换。');
       await update('apply', { ...media, reopen, source, queue: nextQueue, dim: currentDim() });
+      saveSelection(itemId);
     }
+    current.restoreWorkshop = (itemId) => applyWorkshop(itemId, queue, 'workshop', false);
     current.panel = createPanel(current, panelCss, css, { ...current.panelOptions, workshop: state.workshop }, {
       sync: () => sync(current),
       apply: (file, nextQueue, name, reopen) => file.workshopId
@@ -220,7 +238,7 @@ export async function updateWallpaper(command, options, css, expectedPage, creat
         : update('apply', {
         file, queue: nextQueue, name, reopen, source: 'local', dim: currentDim(),
         kind: /\.(mp4|webm)$/i.test(file.name) ? 'video' : 'image',
-      }),
+      }).then((result) => { saveSelection(null); return result; }),
       renderWorkshop: (root, controller, enqueue) => renderWorkshop(root, controller,
         (item) => applyWorkshop(item.id, queue, 'workshop', true), enqueue),
     });
@@ -305,12 +323,21 @@ export async function updateWallpaper(command, options, css, expectedPage, creat
         send('disconnect');
       },
     };
+    const previous = options.restore ? lastSelection() : null;
+    const restore = previous && options.items.some((item) => item.id === previous)
+      && (!state.current || state.current.layer.dataset.kind === 'empty' || state.current.layer.dataset.liveState === 'stopped');
     if (state.current) {
       await update('appearance', {});
       state.current.panel.setWorkshop(state.workshop, true);
-      state.current.panel.open(true, 'library');
+      state.current.panel.open(!restore, 'library');
     } else {
-      await update('apply', { kind: 'empty', reopen: true, source: 'workshop' });
+      await update('apply', { kind: 'empty', reopen: !restore, source: 'workshop' });
+    }
+    if (restore) {
+      const current = state.current;
+      current.restoreWorkshop(previous).catch(() => {
+        if (state.current === current) current.panel.open(true, 'library');
+      });
     }
     return 'workshop connected';
   }
@@ -319,6 +346,7 @@ export async function updateWallpaper(command, options, css, expectedPage, creat
     state.revision++;
     dispose(state.current);
     state.current = null;
+    saveSelection(null);
     return 'cleared';
   }
   if (command === 'pause' || command === 'resume') {
